@@ -39,10 +39,11 @@ public class CheckThisMonthsGoalPassStep {
     public Tasklet checkThisMonthsGoalPassTasklet() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         return (contribution, chunkContext) -> {
-            List<GoalDto> goalDtoList = jdbcTemplate.query("SELECT goal_amount,amount,goal_date  FROM goals WHERE YEAR(goal_date) = YEAR(CURDATE()) AND MONTH(goal_date) = MONTH(CURDATE() - INTERVAL 1 MONTH)", new GoalRowMapper());
+            List<GoalDto> goalDtoList = jdbcTemplate.query("SELECT goal_amount,amount,goal_date,unit_price  FROM goals WHERE YEAR(goal_date) = YEAR(CURDATE()) AND MONTH(goal_date) = MONTH(CURDATE() - INTERVAL 1 MONTH)", new GoalRowMapper());
             if (goalDtoList.size() > 0) {
                 GoalDto goalDto = goalDtoList.get(0);
-                if (goalDto.getGoal_amount() >= goalDto.getAmount()) {
+                if (goalDto.getGoalAmount() >= goalDto.getAmount()) {
+                    log.info("Goal is reached");
                     chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put("CONTINUABLE", "CONTINUABLE");
                     return RepeatStatus.FINISHED;
                 }

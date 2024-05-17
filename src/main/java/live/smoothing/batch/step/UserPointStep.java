@@ -37,7 +37,7 @@ public class UserPointStep {
                 .build();
     }
 
-    @Bean
+    @Bean("userReader")
     public ItemReader<UserDto> reader() {
         JdbcCursorItemReader<UserDto> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
@@ -50,7 +50,7 @@ public class UserPointStep {
     public ItemWriter<UserDto> itemWriter() {
         return new JdbcBatchItemWriterBuilder<UserDto>()
                 .dataSource(dataSource)
-                .sql("INSERT INTO user_points (user_id, point,point_usage) VALUES (:userId," + point + ",'" + point_usage + "')")
+                .sql("INSERT INTO point_details (user_id, point_amount,point_usage,point_date) VALUES (:userId," + point + ",'" + point_usage + "',CURDATE())")
                 .beanMapped()
                 .build();
     }
