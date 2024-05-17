@@ -48,8 +48,7 @@ create table users
     last_access   date
 );
 
-insert into users(user_id, user_password, user_name, user_email, user_state, user_point, last_access) values ('haha', '1234', 'haha','haha@gmail.com','ACTIVE', 1000000, null);
-insert into users(user_id, user_password, user_name, user_email, user_state, user_point, last_access) values ('haha2', '1234', 'haha2','haha2@gmail.com`','ACTIVE', 1000000, null);
+insert into users(user_id, user_password, user_name, user_email, user_state, user_point, last_access) values ('haha', '1234', 'haha','dudwns8411@naver.com','ACTIVE', 1000000, null);
 insert into users(user_id, user_password, user_name, user_email, user_state, user_point, last_access) values ('haha3', '1234', 'haha3','haha3@gmail.com','NOT_APPROVED', 0, null);
 insert into users(user_id, user_password, user_name, user_email, user_state, user_point, last_access) values ('haha4', '1234', 'haha4','haha3@gmail.com','NOT_APPROVED', 0, null);
 insert into users(user_id, user_password, user_name, user_email, user_state, user_point, last_access) values ('haha5', '1234', 'haha5','haha3@gmail.com','NOT_APPROVED', 0, null);
@@ -77,7 +76,6 @@ create table user_roles
 );
 
 insert into user_roles(user_id, role_id) values ('haha', 1);
-insert into user_roles(user_id, role_id) values ('haha2', 2);
 
 create table achievements
 (
