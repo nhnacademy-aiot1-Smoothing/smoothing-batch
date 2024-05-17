@@ -30,7 +30,7 @@ public class UserPointStep {
     @JobScope
     public Step getUsersStep() {
         return stepBuilderFactory.get("getUsersStep")
-                .<UserDto, UserDto>chunk(10)
+                .<UserDto, UserDto>chunk(1)
                 .reader(reader())
                 .writer(itemWriter())
                 .build();
