@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class MonthKwhDto {
+    private GoalDto goal;
     private List<SensorTopicDto> sensorTopics;
-    private List<KwhDto> startData;
-    private List<KwhDto> endData;
+    private List<KwhDto> kwhData;
 }

@@ -15,11 +15,13 @@ public class JobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final Step generateCsvReport;
+    private final Step sendReportEmail;
 
-    @Bean("generateCsvReportAndSendEmailJob")
-    public Job generateCsvReportAndSendEmailJob() {
+    @Bean("generateExcelReportAndSendEmailJob")
+    public Job generateExcelReportAndSendEmailJob() {
         return jobBuilderFactory.get("generateCsvReportAndSendEmailJob")
                 .start(generateCsvReport)
+                .next(sendReportEmail)
                 .build();
     }
 }
