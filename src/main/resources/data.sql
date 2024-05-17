@@ -15,6 +15,16 @@ drop table if exists topics;
 drop table if exists sensors;
 drop table if exists topic_types;
 drop table if exists sensor_types;
+drop table if exists protocol_types;
+drop table if exists goals;
+
+create table goals (
+    goal_id int primary key auto_increment,
+    goal_date date not null,
+    goal_amount int null,
+    amount int null,
+    unit_price int null
+
 drop table if exists broker_error_logs;
 drop table if exists broker;
 drop table if exists hooks;
@@ -222,7 +232,27 @@ create table hook_types
     hook_type varchar(255)
 );
 
+insert into goals values (null, '2024-01-01', 100, 50, 1100);
+insert into goals values (null, '2024-02-01', 100, 50, 1200);
+insert into goals values (null, '2024-03-01', 100, 50, 1300);
+insert into goals values (null, '2024-04-01', 100, 50, 1400);
+insert into goals values (null, '2024-05-01', 100, 50, 1500);
+
+insert into topic_types values ('전력');
+insert into topic_types values ('전압');
+insert into topic_types values ('전력량');
+insert into topic_types values ('온도');
+insert into topic_types values ('습도');
+insert into topic_types values ('co2');
+
+create table hook_types
+(
+    hook_type_id int primary key auto_increment,
+    hook_type varchar(255)
+);
+
 insert into hook_types(hook_type) values ('dooray');
+
 
 create table hooks
 (
@@ -382,6 +412,16 @@ create table sensor_tags
     foreign key (sensor_id) references sensors(sensor_id)
 );
 
+
+insert into users values ('haha', '1234', 'ㅎㅅ', 'doramonz@naver.com', 'ACTIVE', null);
+insert into users values ('haha2', '1234', 'ㅇㅈ', 'dudwns8411@naver.com', 'ACTIVE', null);
+
+insert into tags values (1, 'haha', 'NHN');
+insert into tags values (2, 'haha', 'Office');
+insert into sensor_tags values (1, 1, 1);
+insert into sensor_tags values (2, 2, 2);
+insert into sensor_tags values (3, 1, 2);
+
 insert into sensors(sensor_id, broker_id, sensor_name, sensor_registered_at, sensor_type)
 values (1, 1, '에어컨', null, '전기');
 insert into topics(topic_id, topic, topic_registered_at, sensor_id, topic_type)
@@ -507,3 +547,4 @@ insert into tags values (2, 'haha', 'Office');
 insert into sensor_tags values (1, 1, 1);
 insert into sensor_tags values (2, 2, 2);
 insert into sensor_tags values (3, 1, 2);
+
