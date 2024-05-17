@@ -19,11 +19,13 @@ public class JobConfig {
     private final Step generateCsvReport;
     private final CheckThisMonthsGoalPassStep checkReachingThisMonthsTargetStep;
     private final UserPointStep userPointStep;
+    private final Step sendReportEmail;
 
-    @Bean("generateCsvReportAndSendEmailJob")
-    public Job generateCsvReportAndSendEmailJob() {
+    @Bean("generateExcelReportAndSendEmailJob")
+    public Job generateExcelReportAndSendEmailJob() {
         return jobBuilderFactory.get("generateCsvReportAndSendEmailJob")
                 .start(generateCsvReport)
+                .next(sendReportEmail)
                 .build();
     }
 

@@ -1,17 +1,19 @@
 package live.smoothing.batch.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class GoalDto {
-
-    private Double goal_amount;
-    private Double amount;
-    private LocalDateTime goal_date;
+    private LocalDateTime goalDate;
+    private Integer goalAmount;
+    private Integer amount;
+    private Integer unitPrice;
 }

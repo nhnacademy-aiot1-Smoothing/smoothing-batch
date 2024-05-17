@@ -18,6 +18,30 @@ public class FluxUtil {
     private FluxUtil() {}
 
     /**
+     * InfluxDB Flux 쿼리를 생성한다.
+     *
+     * @param bucketName 버킷 이름
+     * @param measurementName 측정값 이름
+     * @param start 시작 시간
+     * @param topics 토픽
+     * @return Flux 쿼리
+     */
+    public static Flux getKwhFromStart(String bucketName,
+                                       String measurementName,
+                                       Instant start,
+                                       Instant end,
+                                       String[] topics
+    ) {
+        Restrictions orRestrictions = getOrRestrictions(topics);
+
+        return Flux.from(bucketName)
+                .range(start, end)
+                .filter(measurement().equal(measurementName))
+                .filter(orRestrictions)
+                .timeShift(9L, ChronoUnit.HOURS);
+    }
+
+    /**
      * 시작 시간 기준 가장 첫번째 값을 가져오는 InfluxDB FLux 쿼리를 생성한다.
      *
      * @param bucketName 버킷 이름
@@ -66,6 +90,8 @@ public class FluxUtil {
                 .last()
                 .timeShift(9L, ChronoUnit.HOURS);
     }
+
+
 
     /**
      * 토픽을 OR 연산으로 연결하는 Restrictions를 생성한다.

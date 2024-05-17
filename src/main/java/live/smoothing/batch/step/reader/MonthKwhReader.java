@@ -2,9 +2,11 @@ package live.smoothing.batch.step.reader;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.query.dsl.Flux;
+import live.smoothing.batch.dto.GoalDto;
 import live.smoothing.batch.dto.KwhDto;
 import live.smoothing.batch.dto.MonthKwhDto;
 import live.smoothing.batch.dto.SensorTopicDto;
+import live.smoothing.batch.mapper.GoalDtoRowMapper;
 import live.smoothing.batch.mapper.SensorTopicDtoRowMapper;
 import live.smoothing.batch.util.FluxUtil;
 import live.smoothing.batch.util.TimeUtil;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -24,10 +26,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MonthKwhReader implements ItemReader<MonthKwhDto> {
 
-    private static final String RAW_BUCKET = "powermetrics_data";
+    private static final String AGGREGATION_BUCKET = "aggregation";
 
     private final DataSource dataSource;
-    private final InfluxDBClient rawInfluxClient;
+    private final InfluxDBClient aggregationInfluxClient;
 
     private boolean isRead = false;
 
@@ -37,15 +39,36 @@ public class MonthKwhReader implements ItemReader<MonthKwhDto> {
             return null;
         }
 
+        GoalDto goal = getGoal();
         List<SensorTopicDto> sensorTopics = getSensorTopics();
         String[] topics = getTopics(sensorTopics);
 
-        List<KwhDto> startData = getStartData(topics);
-        List<KwhDto> endData = getLastData(topics);
+        List<KwhDto> kwhData = getMothKwhData(topics);
 
         isRead = true;
 
-        return new MonthKwhDto(sensorTopics, startData, endData);
+        return new MonthKwhDto(goal, sensorTopics, kwhData);
+    }
+
+    private GoalDto getGoal() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        LocalDateTime now = LocalDateTime.now();
+
+        int year = now.minusMonths(1).getYear() == 12 ?
+                now.getYear() - 1 :
+                now.getYear();
+
+        int month = now
+                .minusMonths(1).getMonthValue();
+
+        return jdbcTemplate.query(
+                "SELECT *" +
+                    "FROM goals " +
+                    "WHERE YEAR(goal_date) = " + year +
+                    " and MONTH(goal_date) = " + month,
+                new GoalDtoRowMapper()
+        )
+        .stream().findFirst().orElse(null);
     }
 
     private List<SensorTopicDto> getSensorTopics() {
@@ -62,33 +85,21 @@ public class MonthKwhReader implements ItemReader<MonthKwhDto> {
 
     private String[] getTopics(List<SensorTopicDto> sensorTopics) {
         return sensorTopics.stream()
-                .map(SensorTopicDto::getTopics)
+                .map(SensorTopicDto::getTopic)
                 .toArray(String[]::new);
     }
 
-    private List<KwhDto> getStartData(String[] topics) {
+
+    private List<KwhDto> getMothKwhData(String[] topics) {
         Flux fLux =
-                FluxUtil.getFirstKwhFromStart(
-                        RAW_BUCKET,
-                        "mqtt_consumer",
+                FluxUtil.getKwhFromStart(
+                        AGGREGATION_BUCKET,
+                        "kwh_daily4",
                         TimeUtil.getRecentMonth(Instant.now()),
+                        TimeUtil.getRecentDay(Instant.now()),
                         topics
                 );
 
-        return rawInfluxClient.getQueryApi().query(fLux.toString(), KwhDto.class);
-    }
-
-    private List<KwhDto> getLastData(String[] topics) {
-        Flux fLux =
-                FluxUtil.getLastKwhBetweenRange(
-                        RAW_BUCKET,
-                        "mqtt_consumer",
-                        Instant.now().minus(10, ChronoUnit.MINUTES),
-                        Instant.now(),
-//                        TimeUtil.getRecentMonth(Instant.now()),
-                        topics
-                );
-
-        return rawInfluxClient.getQueryApi().query(fLux.toString(), KwhDto.class);
+        return aggregationInfluxClient.getQueryApi().query(fLux.toString(), KwhDto.class);
     }
 }
