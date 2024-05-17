@@ -1,5 +1,7 @@
 package live.smoothing.batch.config;
 
+import live.smoothing.batch.step.CheckThisMonthsGoalPassStep;
+import live.smoothing.batch.step.UserPointStep;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,6 +17,8 @@ public class JobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final Step generateCsvReport;
+    private final CheckThisMonthsGoalPassStep checkReachingThisMonthsTargetStep;
+    private final UserPointStep userPointStep;
 
     @Bean("generateCsvReportAndSendEmailJob")
     public Job generateCsvReportAndSendEmailJob() {
@@ -22,4 +26,13 @@ public class JobConfig {
                 .start(generateCsvReport)
                 .build();
     }
+
+    @Bean("checkReachingThisMonthsTargetJob")
+    public Job checkReachingThisMonthsTargetJob() {
+        return jobBuilderFactory.get("checkReachingThisMonthsTargetJob")
+                .start(checkReachingThisMonthsTargetStep.getThisMonthsGoalStep())
+                .next(userPointStep.getUsersStep())
+                .build();
+    }
+
 }
