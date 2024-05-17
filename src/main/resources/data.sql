@@ -1,3 +1,14 @@
+DROP TABLE IF EXISTS BATCH_STEP_EXECUTION_CONTEXT;
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_CONTEXT;
+DROP TABLE IF EXISTS BATCH_STEP_EXECUTION;
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_PARAMS;
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION;
+DROP TABLE IF EXISTS BATCH_JOB_INSTANCE;
+
+DROP TABLE IF EXISTS BATCH_STEP_EXECUTION_SEQ;
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_SEQ;
+DROP TABLE IF EXISTS BATCH_JOB_SEQ;
+
 drop table if exists sensor_tags;
 drop table if exists tags;
 drop table if exists users;
@@ -11,7 +22,15 @@ drop table if exists brokers;
 drop table if exists topic_types;
 drop table if exists sensor_types;
 drop table if exists protocol_types;
+drop table if exists goals;
 
+create table goals (
+    goal_id int primary key auto_increment,
+    goal_date date not null,
+    goal_amount int null,
+    amount int null,
+    unit_price int null
+);
 
 create table topic_types (
                              topic_type varchar(255) not null primary key
@@ -96,6 +115,12 @@ create table broker_error_logs (
                                    foreign key (broker_id) references brokers(broker_id) on delete cascade
 );
 
+insert into goals values (null, '2024-01-01', 100, 50, 1100);
+insert into goals values (null, '2024-02-01', 100, 50, 1200);
+insert into goals values (null, '2024-03-01', 100, 50, 1300);
+insert into goals values (null, '2024-04-01', 100, 50, 1400);
+insert into goals values (null, '2024-05-01', 100, 50, 1500);
+
 insert into topic_types values ('전력');
 insert into topic_types values ('전압');
 insert into topic_types values ('전력량');
@@ -153,7 +178,9 @@ insert into topics values (13, 'data/s/nhnacademy/b/gyeongnam/p/office/d/gems-35
 insert into sensors values (13, 1, 'Office/빌트인히터',null,'전기');
 insert into topics values (14, 'data/s/nhnacademy/b/gyeongnam/p/office/d/gems-3500/e/electrical_energy/t/built_in_heating/ph/kwh/de/sum',null,13,'전력량');
 
-insert into users values ('haha', '1234', 'admin', 'test@gmail.com', 'ACTIVE', null);
+insert into users values ('haha', '1234', 'ㅎㅅ', 'doramonz@naver.com', 'ACTIVE', null);
+insert into users values ('haha2', '1234', 'ㅇㅈ', 'dudwns8411@naver.com', 'ACTIVE', null);
+
 insert into tags values (1, 'haha', 'NHN');
 insert into tags values (2, 'haha', 'Office');
 insert into sensor_tags values (1, 1, 1);
