@@ -9,41 +9,33 @@ DROP TABLE IF EXISTS BATCH_STEP_EXECUTION_SEQ;
 DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_SEQ;
 DROP TABLE IF EXISTS BATCH_JOB_SEQ;
 
-drop table if exists sensor_tags;
-drop table if exists tags;
-drop table if exists topics;
-drop table if exists sensors;
-drop table if exists topic_types;
-drop table if exists sensor_types;
-drop table if exists protocol_types;
-drop table if exists goals;
+DROP TABLE IF EXISTS sensor_tags;
+DROP TABLE IF EXISTS topics;
+DROP TABLE IF EXISTS sensors;
+DROP TABLE IF EXISTS broker_error_logs;
+DROP TABLE IF EXISTS broker;
+DROP TABLE IF EXISTS sensor_types;
+DROP TABLE IF EXISTS topic_types;
+DROP TABLE IF EXISTS protocol_types;
+DROP TABLE IF EXISTS control_logs;
+DROP TABLE IF EXISTS control_sensors;
+DROP TABLE IF EXISTS hooks;
+DROP TABLE IF EXISTS hook_types;
+DROP TABLE IF EXISTS organization;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS sub_events;
+DROP TABLE IF EXISTS event_types;
+DROP TABLE IF EXISTS point_details;
+DROP TABLE IF EXISTS attendances;
+DROP TABLE IF EXISTS user_oauths;
+DROP TABLE IF EXISTS oauth_providers;
+DROP TABLE IF EXISTS user_achievements;
+DROP TABLE IF EXISTS achievements;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS goals;
 
-create table goals (
-    goal_id int primary key auto_increment,
-    goal_date date not null,
-    goal_amount int null,
-    amount int null,
-    unit_price int null
-
-drop table if exists broker_error_logs;
-drop table if exists broker;
-drop table if exists hooks;
-drop table if exists hook_types;
-drop table if exists goals;
-drop table if exists organization;
-drop table if exists control_logs;
-drop table if exists control_sensors;
-drop table if exists user_roles;
-drop table if exists roles;
-drop table if exists sub_events;
-drop table if exists event_types;
-drop table if exists point_details;
-drop table if exists attendances;
-drop table if exists user_oauths;
-drop table if exists oauth_providers;
-drop table if exists user_achievements;
-drop table if exists achievements;
-drop table if exists users;
 
 create table users
 (
@@ -213,16 +205,7 @@ create table sub_events
     foreign key (event_type_id) references event_types(event_type_id),
     foreign key (user_id) references users(user_id)
 );
-drop table if exists protocol_types;
-drop table if exists goals;
 
-create table goals (
-    goal_id int primary key auto_increment,
-    goal_date date not null,
-    goal_amount int null,
-    amount int null,
-    unit_price int null
-);
 insert into sub_events(event_type_id, user_id) values (1, 'haha');
 insert into sub_events(event_type_id, user_id) values (2, 'haha');
 
@@ -232,27 +215,7 @@ create table hook_types
     hook_type varchar(255)
 );
 
-insert into goals values (null, '2024-01-01', 100, 50, 1100);
-insert into goals values (null, '2024-02-01', 100, 50, 1200);
-insert into goals values (null, '2024-03-01', 100, 50, 1300);
-insert into goals values (null, '2024-04-01', 100, 50, 1400);
-insert into goals values (null, '2024-05-01', 100, 50, 1500);
-
-insert into topic_types values ('전력');
-insert into topic_types values ('전압');
-insert into topic_types values ('전력량');
-insert into topic_types values ('온도');
-insert into topic_types values ('습도');
-insert into topic_types values ('co2');
-
-create table hook_types
-(
-    hook_type_id int primary key auto_increment,
-    hook_type varchar(255)
-);
-
 insert into hook_types(hook_type) values ('dooray');
-
 
 create table hooks
 (
@@ -412,16 +375,6 @@ create table sensor_tags
     foreign key (sensor_id) references sensors(sensor_id)
 );
 
-
-insert into users values ('haha', '1234', 'ㅎㅅ', 'doramonz@naver.com', 'ACTIVE', null);
-insert into users values ('haha2', '1234', 'ㅇㅈ', 'dudwns8411@naver.com', 'ACTIVE', null);
-
-insert into tags values (1, 'haha', 'NHN');
-insert into tags values (2, 'haha', 'Office');
-insert into sensor_tags values (1, 1, 1);
-insert into sensor_tags values (2, 2, 2);
-insert into sensor_tags values (3, 1, 2);
-
 insert into sensors(sensor_id, broker_id, sensor_name, sensor_registered_at, sensor_type)
 values (1, 1, '에어컨', null, '전기');
 insert into topics(topic_id, topic, topic_registered_at, sensor_id, topic_type)
@@ -430,19 +383,6 @@ values (1, 'data/s/nhnacademy/b/gyeongnam/p/office/d/gems-3500/e/electrical_ener
 insert into topics(topic_id, topic, topic_registered_at, sensor_id, topic_type)
 values (2, 'data/s/nhnacademy/b/gyeongnam/p/office/d/gems-3500/e/electrical_energy/t/air_conditioner/ph/kwh/de/sum',
         null, 1, '전력량');
-
-insert into goals values (null, '2024-01-01', 100, 50, 1100);
-insert into goals values (null, '2024-02-01', 100, 50, 1200);
-insert into goals values (null, '2024-03-01', 100, 50, 1300);
-insert into goals values (null, '2024-04-01', 100, 50, 1400);
-insert into goals values (null, '2024-05-01', 100, 50, 1500);
-
-insert into topic_types values ('전력');
-insert into topic_types values ('전압');
-insert into topic_types values ('전력량');
-insert into topic_types values ('온도');
-insert into topic_types values ('습도');
-insert into topic_types values ('co2');
 
 insert into sensors(sensor_id, broker_id, sensor_name, sensor_registered_at, sensor_type)
 values (2, 1, '복사기', null, '전기');
@@ -519,32 +459,3 @@ values (13, 1, '빌트인히터', null, '전기');
 insert into topics(topic_id, topic, topic_registered_at, sensor_id, topic_type)
 values (14, 'data/s/nhnacademy/b/gyeongnam/p/office/d/gems-3500/e/electrical_energy/t/built_in_heating/ph/kwh/de/sum',
         null, 13, '전력량');
-
-
-
-insert into sensors values (12, 1, 'Office/barton_heating_window',null,'전기');
-insert into topics values (13, 'data/s/nhnacademy/b/gyeongnam/p/office/d/gems-3500/e/electrical_energy/t/barton_heating_window/ph/kwh/de/sum',null,12,'전력량');
-
-insert into sensor_tags(tag_id, sensor_id) values (1, 1);
-insert into sensor_tags(tag_id, sensor_id) values (2, 2);
-insert into sensor_tags(tag_id, sensor_id) values (1, 2);
-insert into sensor_tags(tag_id, sensor_id) values (1, 2);
-insert into sensor_tags(tag_id, sensor_id) values (1, 3);
-insert into sensor_tags(tag_id, sensor_id) values (1, 4);
-insert into sensor_tags(tag_id, sensor_id) values (1, 5);
-insert into sensor_tags(tag_id, sensor_id) values (1, 6);
-insert into sensor_tags(tag_id, sensor_id) values (2, 5);
-insert into sensor_tags(tag_id, sensor_id) values (2, 6);
-insert into sensor_tags(tag_id, sensor_id) values (2, 7);
-insert into sensor_tags(tag_id, sensor_id) values (2, 8);
-insert into sensor_tags(tag_id, sensor_id) values (2, 9);
-
-insert into users values ('haha', '1234', 'ㅎㅅ', 'doramonz@naver.com', 'ACTIVE', null);
-insert into users values ('haha2', '1234', 'ㅇㅈ', 'dudwns8411@naver.com', 'ACTIVE', null);
-
-insert into tags values (1, 'haha', 'NHN');
-insert into tags values (2, 'haha', 'Office');
-insert into sensor_tags values (1, 1, 1);
-insert into sensor_tags values (2, 2, 2);
-insert into sensor_tags values (3, 1, 2);
-
