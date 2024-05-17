@@ -34,7 +34,7 @@ public class SendReportEmailStep {
                 .build();
     }
 
-    @Bean
+    @Bean("userInfoReader")
     @StepScope
     public JdbcCursorItemReader<UserInfo> reader() {
         return new JdbcCursorItemReaderBuilder<UserInfo>()
