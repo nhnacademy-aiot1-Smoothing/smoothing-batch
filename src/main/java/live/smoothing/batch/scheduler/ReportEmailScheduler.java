@@ -17,7 +17,7 @@ public class ReportEmailScheduler {
 
     private final Job generateExcelReportAndSendEmailJob;
     private final JobLauncher jobLauncher;
-    private static final String ONE_AM_OF_EVERY_MONTH = "0 1 1 * *";
+    private static final String ONE_AM_OF_EVERY_MONTH = "0 0 1 1 * *";
 
     @Scheduled(cron = ONE_AM_OF_EVERY_MONTH)
     public void schedule() {
