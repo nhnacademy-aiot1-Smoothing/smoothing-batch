@@ -25,12 +25,13 @@ public class UserPointStep {
     private final DataSource dataSource;
     private final Integer point = 1000;
     private final String point_usage = "적립";
+    private final String user_status = "ACTIVE";
 
     @Bean
     @JobScope
     public Step getUsersStep() {
         return stepBuilderFactory.get("getUsersStep")
-                .<UserDto, UserDto>chunk(1)
+                .<UserDto, UserDto>chunk(500)
                 .reader(reader())
                 .writer(itemWriter())
                 .build();
@@ -40,7 +41,7 @@ public class UserPointStep {
     public ItemReader<UserDto> reader() {
         JdbcCursorItemReader<UserDto> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
-        reader.setSql("SELECT user_id FROM users");
+        reader.setSql("SELECT user_id FROM users WHERE user_state = '" + user_status + "'");
         reader.setRowMapper(new UserRowMapper());
         return reader;
     }
