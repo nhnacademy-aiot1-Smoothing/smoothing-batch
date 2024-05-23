@@ -42,14 +42,6 @@ public class JobConfig {
                 .build();
     }
 
-    @Scheduled(cron = "* * 1 1 * ?")
-    public void runGenerateExcelReportAndSendEmailJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        JobParameters jobParameter = new JobParametersBuilder()
-                .addString("generateExcelReportAndSendEmailJob", String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
-        jobLauncher.run(generateExcelReportAndSendEmailJob(), jobParameter);
-    }
-
     @Scheduled(cron = "* * 2 1 * ?")
     public void runCheckReachingThisMonthsTargetJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameter = new JobParametersBuilder()
