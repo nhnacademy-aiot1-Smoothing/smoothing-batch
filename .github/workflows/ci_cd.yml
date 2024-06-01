@@ -25,7 +25,8 @@ jobs:
 # SonarQube
     - name : Run SonarQube
       if: ${{ success() }}
-      run : mvn sonar:sonar -Dsonar.projectKey=practice -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.login=${{secrets.SONAR_TOKEN}}
+      run : ${{ secrets.SONAR_COMMAND }}
+
 
 # CD
     - name: upload file
