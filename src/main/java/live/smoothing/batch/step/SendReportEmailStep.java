@@ -40,7 +40,7 @@ public class SendReportEmailStep {
         return new JdbcCursorItemReaderBuilder<UserInfo>()
                 .name("userInfoReader")
                 .dataSource(dataSource)
-                .sql("SELECT user_name, user_email FROM users WHERE user_state = 'ACTIVE'")
+                .sql("SELECT user_name, user_email FROM users WHERE user_state = 'APPROVED'")
                 .rowMapper((rs, rowNum) -> new UserInfo(rs.getString("user_name"), rs.getString("user_email")))
                 .build();
     }
