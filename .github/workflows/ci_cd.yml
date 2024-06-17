@@ -49,5 +49,13 @@ jobs:
         username: ${{ secrets.SSH_ID }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script_stop: true
-        script: "./start.sh"
+        script: |
+          sudo docker build -t batch:latest ./ --build-arg FILE=target/batch-0.0.1-SNAPSHOT.jar
+          containers=$(sudo docker ps -a | grep batch | awk '{print $1}')
+          if [ -n "$containers" ]; then
+            sudo docker stop $containers
+            sudo docker rm $containers
+          else
+            echo "No containers with 'batch' found."
+          fi
+          sudo docker run -d --name batch-service --network=smoothing --restart always batch
